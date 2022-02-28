@@ -3,6 +3,7 @@ import React,{useState} from 'react'
 import { Form,Button,Card } from 'react-bootstrap';
 import axios from 'axios';
 import { BrowserRouter as Router,Routes, Route,Link } from "react-router-dom";
+import PhoneInput from 'react-phone-number-input';
 import { auth } from './firebase';
 export default function Mainlogin() {
     const [phone_number,setphone_number]=useState('');
@@ -33,17 +34,17 @@ export default function Mainlogin() {
     })
    .catch((err,res)=>{
     if(phone_number=="" && password==""){
-      alert("phoneNUmber and password is required");
+     seterrormessage("Phone Number and Password is Required");
     }
     else if(phone_number==""){
-      alert("phoneNumber is required");
+     seterrormessage("PHone Number is Required");
     }
     else if(password ==""){
-alert("password is required");
+seterrormessage("password is required");
 
     }
     else if(userinfo.phone_number !==phone_number || userinfo.password !==password){
-      alert("phoneNumber or Password is Incoorect");
+     seterrormessage("Wrong Credentials Please enter valid credentials")
     }
     else{
       alert("Successfully loged in")
@@ -61,12 +62,18 @@ alert("password is required");
         <h3 style={{textAlign:"center"}}>Login Here</h3>
         <Form.Group>
           <Form.Label id="phonenumber">PhoneNumber</Form.Label>
-          <Form.Control type="text" value={phone_number} onChange={(e)=>setphone_number(e.target.value)}/>
+          <PhoneInput
+  international
+  countryCallingCodeEditable={false}
+  defaultCountry="RU"
+  value={phone_number}
+  onChange={(e)=>setphone_number(e.target.value)}/>
         </Form.Group>
         <Form.Group>
         <Form.Label id="password">Password</Form.Label>
           <Form.Control type="password" value={password} onChange={(e)=>setpassword(e.target.value)}/>
         </Form.Group>
+        {errormessage && <p style={{color:"red"}}>{errormessage}</p>}
         <Button type="submit" onClick={handlesignin} style={{marginTop:"20px", marginLeft:"30px",backgroundColor:"teal"}}>Login</Button>
       </Form>
       <div >

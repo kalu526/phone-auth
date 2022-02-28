@@ -4,6 +4,7 @@ import { firebase, auth } from './firebase';
 import { Form,Button,Card } from 'react-bootstrap';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import { BrowserRouter as Router,Routes, Route,Link } from "react-router-dom";
+import PhoneInput from 'react-phone-number-input';
 import axios from 'axios';
 const Login = () => {
     // Inputs
@@ -21,12 +22,12 @@ const Login = () => {
     const signin = (e) => {
   e.preventDefault();
   if(phone_number =="" && password ==""){
-      alert("Phone Number and Password is required");
+     seterrormessage("Phone Number and Password is Required");
   }
-         else if (phone_number === "" || phone_number.length < 10){
-            alert("Phone Number is required and must not be less than 10 digit")
+         else if (phone_number === "" || phone_number.length !=13){
+          seterrormessage("Phone NUmber is must not be empty and less than or greater than 13")
         }else if(password ==""){
-            alert("password is required");
+           seterrormessage("Password is required")
         }
     
         let verify = new firebase.auth.RecaptchaVerifier('recaptcha-container');
@@ -81,12 +82,18 @@ const Login = () => {
                     
                 <Form.Group>
             <Form.Label id="phonenumber">PhoneNumber</Form.Label>
-            <Form.Control type="text" value={phone_number} onChange={(e)=>setphone_number(e.target.value)}/>
+            <PhoneInput
+  international
+  countryCallingCodeEditable={false}
+  defaultCountry="RU"
+  value={phone_number}
+  onChange={(e)=>setphone_number(e.target.value)}/>
           </Form.Group>
           <Form.Group>
           <Form.Label id="password">Password</Form.Label>
             <Form.Control type="password" value={password} onChange={(e)=>setpassword(e.target.value)}/>
           </Form.Group>
+          {errormessage && <p style={{color:"red"}}>{errormessage}</p>}
                     <br /><br />
                     <div id="recaptcha-container"></div>
                     <Button onClick={signin}>Send OTP</Button>
